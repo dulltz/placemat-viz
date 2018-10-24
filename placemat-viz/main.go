@@ -20,7 +20,7 @@
 
 package main
 
-import "github.com/dulltz/placemat-viz/cmd"
+import "github.com/dulltz/placemat-viz/placemat-viz/cmd"
 
 func main() {
 	cmd.Execute()
