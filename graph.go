@@ -58,12 +58,18 @@ func connectPods(graph *gographviz.Escape, cluster *ClusterSpec) error {
 }
 
 func connectNodesAndPods(graph *gographviz.Escape, cluster *ClusterSpec) error {
-	for _, node := range cluster.Nodes {
-		err := graph.AddNode("G", node.Name, nil)
+	for nic, _ := range podsLookUp {
+		err := graph.AddSubGraph("G", nic, nil)
 		if err != nil {
 			return err
 		}
+	}
+	for _, node := range cluster.Nodes {
 		for _, nic := range node.Interfaces {
+			err := graph.AddNode(nic, node.Name, nil)
+			if err != nil {
+				return err
+			}
 			if pods, ok := podsLookUp[nic]; ok {
 				attrs := make(map[string]string)
 				attrs[string(gographviz.Label)] = addrLookUp[nic]
