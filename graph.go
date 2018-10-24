@@ -2,6 +2,7 @@ package viz
 
 import (
 	"bytes"
+
 	"github.com/bradleyjkemp/memviz"
 )
 
