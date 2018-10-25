@@ -1,5 +1,6 @@
 # placemat-viz
 
+[![GitHub release](https://img.shields.io/github/release/dulltz/placemat-viz.svg?maxAge=60)](https://github.com/dulltz/placemat-viz/releases)
 [![CircleCI](https://circleci.com/gh/dulltz/placemat-viz.svg?style=svg)](https://circleci.com/gh/dulltz/placemat-viz)
 [![Go Report Card](https://goreportcard.com/badge/github.com/dulltz/placemat-viz)](https://goreportcard.com/report/github.com/dulltz/placemat-viz)
 
