@@ -1,12 +1,16 @@
 package viz
 
 import (
+	"strings"
+
 	"github.com/awalterschulze/gographviz"
 	"github.com/cybozu-go/placemat"
 )
 
-var podsLookUp = make(map[string][]*placemat.PodSpec)
-var addrLookUp = make(map[string]string)
+var (
+	podsLookUp = make(map[string][]*placemat.PodSpec)
+	addrLookUp = make(map[string]string)
+)
 
 // GenerateDots generates GraphViz string in dot language
 func GenerateDots(cluster *ClusterSpec) (string, error) {
@@ -58,21 +62,18 @@ func connectPods(graph *gographviz.Escape, cluster *ClusterSpec) error {
 }
 
 func connectNodesAndPods(graph *gographviz.Escape, cluster *ClusterSpec) error {
-	err := prepareSubGraphs(graph)
+	err := prepareSubGraphs(graph, cluster)
 	if err != nil {
 		return err
 	}
 	for _, node := range cluster.Nodes {
+		graphName := "cluster-" + strings.Join(node.Interfaces, "_")
 		for _, networkName := range node.Interfaces {
-			graphName := "cluster-" + networkName
 			err := graph.AddNode(graphName, node.Name, nil)
 			if err != nil {
 				return err
 			}
 			if pods, ok := podsLookUp[networkName]; ok {
-				//attrs := make(map[string]string)
-				//attrs[string(gographviz.Label)] = addrLookUp[networkName]
-				//err := graph.AddEdge(pods[0].Name, node.Name, false, attrs)
 				err := graph.AddEdge(pods[0].Name, node.Name, false, nil)
 				if err != nil {
 					return err
@@ -83,11 +84,18 @@ func connectNodesAndPods(graph *gographviz.Escape, cluster *ClusterSpec) error {
 	return nil
 }
 
-func prepareSubGraphs(graph *gographviz.Escape) error {
-	for networkName, _ := range podsLookUp {
+func prepareSubGraphs(graph *gographviz.Escape, cluster *ClusterSpec) error {
+	for _, node := range cluster.Nodes {
+		interfacesName := strings.Join(node.Interfaces, "_")
 		attrs := make(map[string]string)
-		attrs[string(gographviz.Label)] = addrLookUp[networkName]
-		graphName := "cluster-" + networkName
+
+		var addresses []string
+		for _, networkName := range node.Interfaces {
+			addresses = append(addresses, addrLookUp[networkName])
+		}
+		labelName := strings.Join(addresses, "\n")
+		attrs[string(gographviz.Label)] = labelName
+		graphName := "cluster-" + interfacesName
 		err := graph.AddSubGraph("G", graphName, attrs)
 		if err != nil {
 			return err
