@@ -43,12 +43,12 @@ func connectPods(graph *gographviz.Escape, cluster *ClusterSpec) error {
 			addrLookUp[nic.Network] = nic.Addresses[0]
 		}
 	}
-	for network, pods := range podsLookUp {
+	for networkName, pods := range podsLookUp {
 		if len(pods) != 2 {
 			continue
 		}
 		attrs := make(map[string]string)
-		attrs[string(gographviz.Label)] = addrLookUp[network]
+		attrs[string(gographviz.Label)] = addrLookUp[networkName]
 		err := graph.AddEdge(pods[0].Name, pods[1].Name, false, attrs)
 		if err != nil {
 			return err
@@ -58,28 +58,40 @@ func connectPods(graph *gographviz.Escape, cluster *ClusterSpec) error {
 }
 
 func connectNodesAndPods(graph *gographviz.Escape, cluster *ClusterSpec) error {
-	for nic, _ := range podsLookUp {
-		err := graph.AddSubGraph("G", nic, nil)
-		if err != nil {
-			return err
-		}
+	err := prepareSubGraphs(graph)
+	if err != nil {
+		return err
 	}
 	for _, node := range cluster.Nodes {
-		for _, nic := range node.Interfaces {
-			err := graph.AddNode(nic, node.Name, nil)
+		for _, networkName := range node.Interfaces {
+			graphName := "cluster-" + networkName
+			err := graph.AddNode(graphName, node.Name, nil)
 			if err != nil {
 				return err
 			}
-			if pods, ok := podsLookUp[nic]; ok {
-				attrs := make(map[string]string)
-				attrs[string(gographviz.Label)] = addrLookUp[nic]
-				err := graph.AddEdge(pods[0].Name, node.Name, false, attrs)
+			if pods, ok := podsLookUp[networkName]; ok {
+				//attrs := make(map[string]string)
+				//attrs[string(gographviz.Label)] = addrLookUp[networkName]
+				//err := graph.AddEdge(pods[0].Name, node.Name, false, attrs)
+				err := graph.AddEdge(pods[0].Name, node.Name, false, nil)
 				if err != nil {
 					return err
 				}
 			}
 		}
 	}
+	return nil
+}
 
+func prepareSubGraphs(graph *gographviz.Escape) error {
+	for networkName, _ := range podsLookUp {
+		attrs := make(map[string]string)
+		attrs[string(gographviz.Label)] = addrLookUp[networkName]
+		graphName := "cluster-" + networkName
+		err := graph.AddSubGraph("G", graphName, attrs)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
