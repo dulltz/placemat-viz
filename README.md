@@ -8,13 +8,17 @@ Visualization tool for Placemat.
 
 - Graphviz (with `dot` CLI command)
 - `cluster.yml` 
-  - resource file for [Placemat](https://github.com/cybozu-go/placemat). The example is [here](https://raw.githubusercontent.com/cybozu-go/placemat-menu/master/testdata/cluster.yml).
+  - Resource file for [Placemat](https://github.com/cybozu-go/placemat)
 
-## Usage 
+## Usage
 
 Generate a figure from cluster.yml
 
 ```console
 $ placemat-viz --input cluster.yml | dot -T svg > output.svg
 ```
+
+Output example from this [cluster.yml](https://raw.githubusercontent.com/cybozu-go/placemat-menu/master/testdata/cluster.yml):
+
+![rack2](./output-rack2.svg)
 
