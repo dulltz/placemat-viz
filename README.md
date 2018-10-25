@@ -1,6 +1,7 @@
 # placemat-viz
 
-[![CircleCI](https://circleci.com/gh/cybozu-go/cke.svg?style=svg)](https://circleci.com/gh/cybozu-go/cke)
+[![CircleCI](https://circleci.com/gh/dulltz/placemat-viz.svg?style=svg)](https://circleci.com/gh/dulltz/placemat-viz)
+[![Go Report Card](https://goreportcard.com/badge/github.com/dulltz/placemat-viz)](https://goreportcard.com/report/github.com/dulltz/placemat-viz)
 
 Visualization tool for [Placemat](https://github.com/cybozu-go/placemat).
 
@@ -18,7 +19,7 @@ $ go get -u github.com/dulltz/placemat-viz/placemat-viz
 
 ## Usage
 
-Generate a figure from cluster.yml
+Generate a diagram from cluster.yml
 
 ```console
 $ placemat-viz --input cluster.yml | dot -T svg > output.svg
