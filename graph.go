@@ -12,8 +12,8 @@ var (
 	addrLookUp = make(map[string]string)
 )
 
-// GenerateDots generates GraphViz string in dot language
-func GenerateDots(cluster *ClusterSpec) (string, error) {
+// Generate generates Graphviz string
+func Generate(cluster *ClusterSpec) (string, error) {
 	g := gographviz.NewEscape()
 	err := g.SetName("G")
 	if err != nil {
