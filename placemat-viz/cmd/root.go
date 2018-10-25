@@ -61,11 +61,11 @@ func run(yaml string) error {
 	if err != nil {
 		return err
 	}
-	output, err := viz.Generate(cluster)
+	graph, err := viz.NewVisualizer().Generate(cluster)
 	if err != nil {
 		return err
 	}
-	fmt.Println(output)
+	fmt.Println(graph.String())
 	return nil
 }
 
