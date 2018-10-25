@@ -61,7 +61,7 @@ func run(yaml string) error {
 	if err != nil {
 		return err
 	}
-	output, err := viz.GenerateDots(cluster)
+	output, err := viz.Generate(cluster)
 	if err != nil {
 		return err
 	}
